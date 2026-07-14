@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>What the Search Box Was Trying to Tell Us — A Research & Discovery Case Study | Sixth City Marketing</title>
-<meta name="description" content="How Sixth City Marketing reads 12 months of real, conversational search queries to find demand a business never thought to name — a research and discovery case study.">
+<title>Your Customers Are Writing You Prompts — A Prompt-Research Case Study | Sixth City Marketing</title>
+<meta name="description" content="How Sixth City Marketing mines Google Search Console for the long, conversational, prompt-style questions customers ask Google and AI assistants — and turns the patterns into content and outreach strategy.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -12,7 +12,6 @@
   :root{
     --ink:#0E1D2B;
     --ink-2:#16293b;
-    --ink-3:#26405a;
     --paper:#EEF1F3;
     --paper-2:#F7F9FA;
     --coral:#EC5A44;
@@ -27,218 +26,154 @@
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
+    margin:0;background:var(--paper);color:var(--ink);
     font-family:"Hanken Grotesk",system-ui,-apple-system,sans-serif;
-    font-size:18px;
-    line-height:1.6;
-    -webkit-font-smoothing:antialiased;
-    text-rendering:optimizeLegibility;
+    font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
   }
-  h1,h2,h3{font-family:"Saira Condensed",system-ui,sans-serif;font-weight:700;line-height:.98;margin:0;letter-spacing:.005em}
+  h1,h2,h3,h4{font-family:"Saira Condensed",system-ui,sans-serif;font-weight:700;line-height:.98;margin:0;letter-spacing:.005em}
   p{margin:0 0 1em}
   a{color:var(--cyan);text-decoration:none}
   a:hover{text-decoration:underline}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
-  .eyebrow{
-    font-family:"Space Mono",monospace;font-size:12.5px;font-weight:700;
-    letter-spacing:.28em;text-transform:uppercase;color:var(--coral);margin:0 0 18px
-  }
+  .eyebrow{font-family:"Space Mono",monospace;font-size:12.5px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--coral);margin:0 0 18px}
   .eyebrow.cyan{color:var(--cyan)}
   .eyebrow.dim{color:var(--cyan-soft)}
-  .q{font-family:"Space Mono",monospace}
 
   /* ---------- top bar ---------- */
   .topbar{background:var(--ink);border-bottom:1px solid var(--line-dk)}
   .topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:66px}
   .topbar img{height:26px;width:auto;display:block}
-  .topbar .tag{
-    font-family:"Space Mono",monospace;font-size:11.5px;letter-spacing:.22em;
-    text-transform:uppercase;color:var(--cyan-soft)
-  }
+  .topbar .tag{font-family:"Space Mono",monospace;font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan-soft)}
 
   /* ---------- hero ---------- */
-  .hero{
-    background:var(--ink);color:#fff;position:relative;overflow:hidden;
-    padding:78px 0 8px;
-  }
+  .hero{background:var(--ink);color:#fff;position:relative;overflow:hidden;padding:78px 0 8px}
   .hero .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center}
-  .hero h1{font-size:clamp(42px,7vw,86px);color:#fff;letter-spacing:-.01em}
-  .hero h1 .hl{color:var(--coral);display:inline-block}
-  .hero .lede{font-size:clamp(17px,2.1vw,21px);color:#c9d4de;max-width:34ch;margin-top:22px}
+  .hero h1{font-size:clamp(40px,6.6vw,82px);color:#fff;letter-spacing:-.01em}
+  .hero h1 .hl{color:var(--coral)}
+  .hero .lede{font-size:clamp(17px,2.1vw,21px);color:#c9d4de;max-width:36ch;margin-top:22px}
   .hero .lede b{color:#fff;font-weight:600}
 
-  /* noise -> signal query field */
-  .field{
-    position:relative;border:1px solid var(--line-dk);border-radius:14px;
-    background:linear-gradient(160deg,#12253550,#0c1a2650);
-    padding:26px 24px;min-height:360px;overflow:hidden;
-  }
-  .field .fhead{
-    font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;
-    color:#6f8494;display:flex;justify-content:space-between;margin-bottom:16px
-  }
-  .noise{display:flex;flex-wrap:wrap;gap:7px 12px;align-content:flex-start}
-  .noise span{
-    font-family:"Space Mono",monospace;font-size:13px;
-    color:#607689;opacity:0;transform:translateY(4px);
-    transition:opacity .5s ease, transform .5s ease;
-  }
-  .signal{
-    margin-top:20px;position:relative;
-    border:1px solid var(--coral);border-radius:10px;background:#EC5A4415;
-    padding:16px 18px;opacity:0;transform:scale(.98);
-    transition:opacity .6s ease .1s, transform .6s cubic-bezier(.2,.9,.3,1.3) .1s;
-  }
-  .signal .lab{
-    font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
-    color:var(--coral);margin-bottom:7px;display:block
-  }
-  .signal .qtext{font-family:"Space Mono",monospace;font-size:clamp(15px,2vw,19px);color:#fff;font-weight:700}
-  .signal .meta{font-size:13px;color:#9fb0bd;margin-top:8px;font-family:"Hanken Grotesk",sans-serif}
+  .field{position:relative;border:1px solid var(--line-dk);border-radius:14px;background:linear-gradient(160deg,#12253550,#0c1a2650);padding:26px 24px;min-height:378px;overflow:hidden}
+  .field .fhead{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#6f8494;display:flex;justify-content:space-between;margin-bottom:16px}
+  .noise{display:flex;flex-direction:column;gap:6px;align-content:flex-start}
+  .noise span{font-family:"Space Mono",monospace;font-size:12.5px;color:#5f7486;opacity:0;transform:translateY(4px);transition:opacity .5s ease, transform .5s ease;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .signal{margin-top:18px;position:relative;border:1px solid var(--coral);border-radius:10px;background:#EC5A4415;padding:16px 18px;opacity:0;transform:scale(.98);transition:opacity .6s ease .1s, transform .6s cubic-bezier(.2,.9,.3,1.3) .1s}
+  .signal .lab{font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--coral);margin-bottom:7px;display:block}
+  .signal .qtext{font-family:"Space Mono",monospace;font-size:clamp(14px,1.7vw,16.5px);color:#fff;font-weight:700;line-height:1.45}
+  .signal .meta{font-size:13px;color:#9fb0bd;margin-top:9px;font-family:"Hanken Grotesk",sans-serif}
   .is-in .noise span{opacity:.5;transform:none}
   .is-in .signal{opacity:1;transform:none}
 
-  .statstrip{
-    margin-top:56px;border-top:1px solid var(--line-dk);
-    display:grid;grid-template-columns:repeat(3,1fr);
-  }
+  .statstrip{margin-top:56px;border-top:1px solid var(--line-dk);display:grid;grid-template-columns:repeat(3,1fr)}
   .statstrip div{padding:26px 8px 30px}
-  .statstrip .n{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:44px;color:#fff;line-height:1}
+  .statstrip .n{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:40px;color:#fff;line-height:1}
   .statstrip .n b{color:var(--coral);font-weight:700}
-  .statstrip .k{font-family:"Space Mono",monospace;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:#7f93a2;margin-top:9px}
+  .statstrip .k{font-family:"Space Mono",monospace;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#7f93a2;margin-top:9px}
 
-  /* ---------- generic section ---------- */
   section{padding:96px 0}
-  .lead-h{font-size:clamp(30px,4.6vw,54px);letter-spacing:-.01em;max-width:20ch}
+  .lead-h{font-size:clamp(30px,4.6vw,54px);letter-spacing:-.01em;max-width:22ch}
   .kicker{max-width:60ch;color:var(--slate);font-size:19px;margin-top:22px}
-  .kicker.tight{max-width:48ch}
+  .kicker.tight{max-width:52ch}
 
-  .premise .cols{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:start;margin-top:14px}
-  .premise blockquote{
-    margin:0;font-family:"Saira Condensed",sans-serif;font-weight:600;
-    font-size:clamp(24px,3.4vw,36px);line-height:1.06;color:var(--ink)
-  }
-  .premise blockquote .u{
-    background:linear-gradient(transparent 62%, #EC5A4433 62%);padding:0 2px
-  }
-  .premise .support p{color:var(--slate);font-size:17px}
+  /* ---------- keyword vs prompt ---------- */
+  .vs .pair{display:grid;grid-template-columns:1fr 1.35fr;gap:22px;margin-top:48px;align-items:stretch}
+  .vs .panel{border-radius:16px;padding:30px 30px 34px;display:flex;flex-direction:column}
+  .vs .old{background:#E4E9ED;border:1px solid var(--line)}
+  .vs .new{background:var(--ink);color:#fff;border:1.5px solid var(--coral);position:relative}
+  .vs .plabel{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:20px}
+  .vs .old .plabel{color:var(--slate)}
+  .vs .new .plabel{color:var(--coral)}
+  .vs .term{font-family:"Space Mono",monospace;font-weight:700;color:var(--slate);font-size:clamp(20px,3vw,26px)}
+  .vs .prompt{font-family:"Space Mono",monospace;font-weight:700;color:#fff;font-size:clamp(17px,2.3vw,23px);line-height:1.45}
+  .vs .note{margin-top:auto;padding-top:20px;font-size:15.5px}
+  .vs .old .note{color:var(--slate)}
+  .vs .new .note{color:#b9c7d2}
+  .vs .new .note b{color:#fff;font-weight:600}
+  .vs .arrow{display:flex;align-items:center;justify-content:center;font-family:"Saira Condensed",sans-serif}
+  .aiaside{margin-top:26px;border-left:3px solid var(--cyan);background:var(--paper-2);padding:18px 22px;border-radius:0 10px 10px 0;max-width:74ch}
+  .aiaside .q{font-family:"Space Mono",monospace;font-size:13.5px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:6px;padding:4px 8px;display:inline-block}
+  .aiaside p{margin:0;color:var(--slate);font-size:16px}
 
-  /* ---------- method (numbered) ---------- */
+  /* ---------- method ---------- */
   .method{background:var(--ink-2);color:#fff}
   .method .lead-h{color:#fff}
   .method .kicker{color:#a9bac6}
-  .steps{margin-top:52px;display:grid;gap:0}
-  .step{
-    display:grid;grid-template-columns:96px 1fr;gap:28px;
-    padding:30px 0;border-top:1px solid var(--line-dk);align-items:start
-  }
-  .step:last-child{border-bottom:1px solid var(--line-dk)}
-  .step .num{
-    font-family:"Saira Condensed",sans-serif;font-weight:800;font-size:60px;
-    color:transparent;-webkit-text-stroke:1.4px var(--cyan-soft);line-height:.8
-  }
-  .step h3{font-size:26px;color:#fff;margin-bottom:8px}
-  .step p{color:#a9bac6;font-size:16.5px;max-width:60ch;margin:0}
-  .markers{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
-  .markers span{
-    font-family:"Space Mono",monospace;font-size:12.5px;color:#d7e2ea;
-    border:1px solid var(--line-dk);border-radius:999px;padding:5px 11px;background:#ffffff08
-  }
-  .markers span.hot{border-color:var(--coral);color:#ffd9d0;background:#EC5A4418}
+  .steps{margin-top:52px;display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:1px solid var(--line-dk)}
+  .step{padding:30px 26px 30px 0;border-right:1px solid var(--line-dk)}
+  .step:last-child{border-right:none;padding-right:0}
+  .step .num{font-family:"Saira Condensed",sans-serif;font-weight:800;font-size:52px;color:transparent;-webkit-text-stroke:1.4px var(--cyan-soft);line-height:.8;display:block;margin-bottom:16px}
+  .step h3{font-size:23px;color:#fff;margin-bottom:9px;line-height:1.02}
+  .step p{color:#a9bac6;font-size:15.5px;margin:0}
 
   /* ---------- themes ---------- */
   .themes .lead-h{max-width:24ch}
   .cardgrid{margin-top:52px;display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
-  .card{
-    background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px 26px 24px;
-    display:flex;flex-direction:column;position:relative;overflow:hidden
-  }
-  .card.feature{grid-column:1 / -1;border:1.5px solid var(--coral);background:linear-gradient(180deg,#fff, #FFF6F4)}
-  .card .tnum{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.18em;color:var(--cyan);text-transform:uppercase}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px;display:flex;flex-direction:column}
+  .card.feature{grid-column:1 / -1;border:1.5px solid var(--coral);background:linear-gradient(180deg,#fff,#FFF6F4)}
+  .card .tnum{font-family:"Space Mono",monospace;font-size:11.5px;letter-spacing:.16em;color:var(--cyan);text-transform:uppercase}
   .card.feature .tnum{color:var(--coral-deep)}
-  .card h3{font-size:27px;margin:10px 0 4px;letter-spacing:0}
-  .card.feature h3{font-size:clamp(28px,3.5vw,40px)}
-  .card .job{color:var(--slate);font-size:16px;margin-bottom:18px}
-  .card .job b{color:var(--ink);font-weight:600}
-  .qlist{display:flex;flex-direction:column;gap:7px;margin:0 0 20px}
-  .qlist .qi{
-    font-family:"Space Mono",monospace;font-size:13.5px;color:var(--ink);
-    background:var(--paper);border-radius:7px;padding:8px 11px;border:1px solid var(--line)
-  }
-  .qlist .qi::before{content:"\201C";color:var(--cyan);margin-right:2px}
-  .qlist .qi::after{content:"\201D";color:var(--cyan);margin-left:1px}
-  .card.feature .qlist{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .did{
-    margin-top:auto;border-top:1px dashed var(--line);padding-top:15px;
-    display:flex;gap:12px;align-items:flex-start
-  }
-  .did .chip{
-    font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
-    color:#fff;background:var(--cyan);border-radius:6px;padding:5px 9px;white-space:nowrap;flex-shrink:0;margin-top:2px
-  }
-  .card.feature .did .chip{background:var(--coral-deep)}
-  .did p{margin:0;font-size:15px;color:var(--ink)}
-  .did p b{font-weight:600}
+  .card h3{font-size:26px;margin:9px 0 18px;letter-spacing:0;line-height:1.02}
+  .card.feature h3{font-size:clamp(26px,3.4vw,38px);max-width:20ch}
+  .prompts{display:flex;flex-direction:column;gap:9px;margin:0 0 18px}
+  .card.feature .prompts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .pq{font-family:"Space Mono",monospace;font-size:14px;line-height:1.4;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--coral);border-radius:8px;padding:11px 13px}
+  .cluster{margin:0 0 18px}
+  .cluster .clab{font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--slate);margin-bottom:9px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chips span{font-family:"Space Mono",monospace;font-size:12px;color:var(--slate);background:transparent;border:1px dashed var(--line);border-radius:999px;padding:4px 10px}
+  .insight{margin-top:auto;border-top:1px solid var(--line);padding-top:16px;display:flex;gap:12px;align-items:flex-start}
+  .insight .chip{font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--cyan);border-radius:6px;padding:5px 9px;white-space:nowrap;flex-shrink:0;margin-top:2px}
+  .card.feature .insight .chip{background:var(--coral-deep)}
+  .insight p{margin:0;font-size:15.5px;color:var(--ink)}
+  .insight p b{font-weight:600}
 
   /* ---------- spotlight ---------- */
   .spotlight{background:var(--ink);color:#fff;text-align:center}
   .spotlight .eyebrow{color:var(--coral)}
-  .spotlight .big{
-    font-family:"Saira Condensed",sans-serif;font-weight:700;
-    font-size:clamp(30px,5vw,60px);line-height:1.02;max-width:20ch;margin:0 auto;letter-spacing:-.01em
-  }
+  .spotlight .big{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:clamp(30px,5vw,58px);line-height:1.03;max-width:22ch;margin:0 auto;letter-spacing:-.01em}
   .spotlight .big .hl{color:var(--coral)}
-  .spotlight .sub{max-width:58ch;margin:26px auto 0;color:#a9bac6;font-size:18px}
-  .actions3{margin-top:60px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;text-align:left}
-  .act{border:1px solid var(--line-dk);border-radius:14px;padding:24px 22px;background:#ffffff06}
-  .act .an{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan-soft)}
-  .act h4{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:23px;margin:12px 0 8px;color:#fff}
-  .act p{color:#9fb0bd;font-size:15px;margin:0}
+  .spotlight .sub{max-width:60ch;margin:26px auto 0;color:#a9bac6;font-size:18px}
 
-  /* ---------- byproducts ---------- */
-  .byproducts .lead-h{max-width:22ch}
-  .bplist{margin-top:46px;display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-  .bp{display:grid;grid-template-columns:34px 1fr;gap:16px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px 22px}
-  .bp .dot{width:12px;height:12px;border-radius:50%;background:var(--coral);margin-top:7px}
-  .bp h4{font-family:"Saira Condensed",sans-serif;font-weight:700;font-size:20px;margin:0 0 4px}
-  .bp p{margin:0;font-size:15px;color:var(--slate)}
+  /* ---------- two playbooks ---------- */
+  .playbooks .lead-h{max-width:22ch}
+  .pbgrid{margin-top:50px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .pb{border-radius:16px;padding:30px;border:1px solid var(--line);background:#fff}
+  .pb.content{border-top:5px solid var(--cyan)}
+  .pb.outreach{border-top:5px solid var(--coral)}
+  .pb h3{font-size:26px;margin-bottom:6px}
+  .pb .plede{color:var(--slate);font-size:15.5px;margin-bottom:20px}
+  .pb ul{margin:0;padding:0;list-style:none}
+  .pb li{position:relative;padding:11px 0 11px 26px;border-top:1px solid var(--line);font-size:16px}
+  .pb li:first-child{border-top:none}
+  .pb li::before{content:"";position:absolute;left:0;top:18px;width:9px;height:9px;border-radius:2px}
+  .pb.content li::before{background:var(--cyan)}
+  .pb.outreach li::before{background:var(--coral)}
+  .pbfoot{margin-top:34px;text-align:center;font-family:"Saira Condensed",sans-serif;font-weight:600;font-size:clamp(21px,3vw,30px);color:var(--ink);line-height:1.1}
+  .pbfoot .u{background:linear-gradient(transparent 62%, #EC5A4433 62%);padding:0 3px}
 
-  /* ---------- CTA / footer ---------- */
-  .cta{background:linear-gradient(180deg,var(--paper),#E6EBEE);text-align:center}
-  .cta h2{font-size:clamp(32px,5vw,58px);max-width:18ch;margin:0 auto;letter-spacing:-.01em}
-  .cta .sub{max-width:52ch;margin:22px auto 0;color:var(--slate);font-size:19px}
-  .btn{
-    display:inline-block;margin-top:34px;background:var(--coral);color:#fff;
-    font-family:"Space Mono",monospace;font-weight:700;font-size:14px;letter-spacing:.06em;
-    padding:16px 30px;border-radius:10px;transition:transform .15s ease, background .15s ease
-  }
-  .btn:hover{background:var(--coral-deep);text-decoration:none;transform:translateY(-2px)}
   footer{background:var(--ink);color:#8ba0af;padding:48px 0}
   footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
   footer img{height:30px}
-  footer .fnote{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.04em;max-width:46ch;line-height:1.7}
+  footer .fnote{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.04em;max-width:48ch;line-height:1.7}
   footer a{color:var(--cyan-soft)}
 
   .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease}
   .reveal.is-in{opacity:1;transform:none}
 
-  /* ---------- responsive ---------- */
   @media (max-width:900px){
     body{font-size:17px}
     .hero{padding:52px 0 4px}
     .hero .grid{grid-template-columns:1fr;gap:34px}
-    .premise .cols{grid-template-columns:1fr;gap:30px}
+    .vs .pair{grid-template-columns:1fr;gap:16px}
+    .steps{grid-template-columns:1fr 1fr}
+    .step{border-right:none;border-bottom:1px solid var(--line-dk);padding:26px 0}
+    .step:nth-child(odd){padding-right:22px}
     .cardgrid{grid-template-columns:1fr}
-    .card.feature .qlist{grid-template-columns:1fr}
-    .actions3{grid-template-columns:1fr}
-    .bplist{grid-template-columns:1fr}
+    .card.feature .prompts{grid-template-columns:1fr}
+    .pbgrid{grid-template-columns:1fr}
     .statstrip{grid-template-columns:1fr}
     .statstrip div{padding:20px 8px;border-bottom:1px solid var(--line-dk)}
-    section{padding:66px 0}
-    .step{grid-template-columns:60px 1fr;gap:16px}
-    .step .num{font-size:42px}
+    section{padding:64px 0}
   }
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
@@ -252,7 +187,7 @@
 <div class="topbar">
   <div class="wrap">
     <img src="assets/scm-logo-white.png" alt="Sixth City Marketing">
-    <span class="tag">Research &amp; Discovery · Case Study</span>
+    <span class="tag">Prompt Research · Case Study</span>
   </div>
 </div>
 
@@ -261,44 +196,52 @@
   <div class="wrap">
     <div class="grid">
       <div>
-        <p class="eyebrow">Search-listening case study</p>
-        <h1>Your customers already <span class="hl">told you</span> what they want.</h1>
-        <p class="lede">We read <b>twelve months of real search questions</b> for a multi-location pet-boarding brand — the long, spoken-style queries people bring to Google and AI assistants — and found a whole line of demand nobody had named.</p>
+        <p class="eyebrow">Prompt-mining case study</p>
+        <h1>Your customers are writing you <span class="hl">prompts.</span> We read them.</h1>
+        <p class="lede">People no longer type two words. They ask Google and AI assistants full, spoken questions — packed with their situation, their worry, and the thing that will actually decide the sale. We mined <b>twelve months</b> of them for a multi-location pet-boarding brand and turned the patterns into strategy.</p>
       </div>
 
       <div class="field" id="field" aria-hidden="true">
-        <div class="fhead"><span>search console · raw queries</span><span>12 mo</span></div>
+        <div class="fhead"><span>real questions · anonymized</span><span>12 mo</span></div>
         <div class="noise" id="noise"></div>
         <div class="signal">
-          <span class="lab">◆ signal</span>
-          <div class="qtext">dog boarding near airport</div>
-          <div class="meta">One of thousands of trips that start with a suitcase and a dog. This is a travel purchase — and no one had said so on the website.</div>
+          <span class="lab">◆ this is a prompt, not a keyword</span>
+          <div class="qtext">"as a dog owner who values a friendly, trustworthy experience, what should i look for when choosing where to board my dog?"</div>
+          <div class="meta">A real, unedited question. It tells you who they are and what will win them — a keyword tool would only show you "dog boarding."</div>
         </div>
       </div>
     </div>
 
     <div class="statstrip">
-      <div><div class="n">12<b>mo</b></div><div class="k">of real queries read</div></div>
-      <div><div class="n">7</div><div class="k">demand themes clustered</div></div>
-      <div><div class="n">1</div><div class="k">insight nobody had named</div></div>
+      <div><div class="n">12<b>mo</b></div><div class="k">of real questions read</div></div>
+      <div><div class="n">6</div><div class="k">buyer intents uncovered</div></div>
+      <div><div class="n">2</div><div class="k">playbooks: content + outreach</div></div>
     </div>
   </div>
 </header>
 
-<!-- ======================= PREMISE ======================= -->
-<section class="premise">
+<!-- ======================= KEYWORD VS PROMPT ======================= -->
+<section class="vs">
   <div class="wrap">
-    <p class="eyebrow cyan">The premise</p>
-    <h2 class="lead-h reveal">Keyword tools give you volumes. Search Console gives you voices.</h2>
-    <div class="cols">
-      <div class="reveal">
-        <blockquote>Google Search Console is the one place you can read the <span class="u">actual words</span> real customers use — including the thousands of long, spoken questions no keyword tool will ever show you.</blockquote>
+    <p class="eyebrow cyan">First, the thing everyone asks</p>
+    <h2 class="lead-h reveal">"Aren't those just keywords?" No — and the difference is the whole point.</h2>
+    <p class="kicker reveal">A keyword is what someone types when they don't trust the machine to understand them. A prompt is what they type when they do. Prompts carry the context keywords strip out.</p>
+
+    <div class="pair">
+      <div class="panel old reveal">
+        <div class="plabel">The old way · a keyword</div>
+        <div class="term">"dog boarding"</div>
+        <p class="note">Two words. No who, no when, no why. It tells you someone might buy — nothing about how to win them.</p>
       </div>
-      <div class="support reveal">
-        <p>Voice search and AI assistants trained people to ask full questions instead of typing two words. Those questions land in Search Console as raw, unrounded, deeply human language.</p>
-        <p>Read one at a time, they look like noise. Aggregated, they stop being keywords and start being <b>jobs people are trying to get done</b> — some of which a business has never thought to say out loud.</p>
-        <p>Our discovery process is simply learning to listen to them at scale.</p>
+      <div class="panel new reveal">
+        <div class="plabel">The prompt-era way · a real question</div>
+        <div class="prompt">"i need to board my dog while i'm away next week — what are my options, and is there anywhere near the airport?"</div>
+        <p class="note"><b>The when</b> (next week). <b>The worry</b> (leaving the dog). <b>The deciding factor</b> (near the airport). One question hands you the whole sale.</p>
       </div>
+    </div>
+
+    <div class="aiaside reveal">
+      <p>Some of these questions arrive with an AI assistant's fingerprints still attached — we found real queries that begin <span class="q">"context: location: united states — do not include location references in your response…"</span> Your customers aren't just searching. They're prompting bots, and the bots are quoting them to you.</p>
     </div>
   </div>
 </section>
@@ -306,49 +249,30 @@
 <!-- ======================= METHOD ======================= -->
 <section class="method">
   <div class="wrap">
-    <p class="eyebrow dim">The method</p>
-    <h2 class="lead-h reveal">Five moves, from a raw query log to a page you can change on Monday.</h2>
-    <p class="kicker reveal">This is a real sequence — each step depends on the one before it.</p>
+    <p class="eyebrow dim">Our method</p>
+    <h2 class="lead-h reveal">How we mine prompts — in four plain steps.</h2>
+    <p class="kicker reveal">No guesswork and no expensive tools. Just the questions your customers already asked, read properly.</p>
 
     <div class="steps">
       <div class="step reveal">
-        <div class="num">01</div>
-        <div>
-          <h3>Read the whole landscape first</h3>
-          <p>Pull the top queries by impression to see the shape of demand: what's branded, what's not, and where the volume actually sits versus where the business ranks.</p>
-        </div>
+        <span class="num">01</span>
+        <h3>Pull the real questions</h3>
+        <p>We export every search that brought someone to the site — the actual words, not a tool's rounded-off guess.</p>
       </div>
       <div class="step reveal">
-        <div class="num">02</div>
-        <div>
-          <h3>Isolate the conversational queries</h3>
-          <p>Spoken-style and AI-assistant queries are longer and carry natural-language markers. We pull them at scale, one marker at a time, keeping the page each question already lands on.</p>
-          <div class="markers">
-            <span>how</span><span>what</span><span>can</span><span>should</span><span>do</span>
-            <span class="hot">near</span><span class="hot">airport</span><span>cost</span><span>vs</span><span>left alone</span><span>vaccine</span><span>first time</span>
-          </div>
-        </div>
+        <span class="num">02</span>
+        <h3>Keep the prompts</h3>
+        <p>We set the short keywords aside and keep the long, conversational, context-rich questions — the prompt-style ones.</p>
       </div>
       <div class="step reveal">
-        <div class="num">03</div>
-        <div>
-          <h3>Cluster into jobs, not keywords</h3>
-          <p>Group the questions by the human need underneath them — why someone is really asking — rather than by matching words. Seven distinct jobs surfaced.</p>
-        </div>
+        <span class="num">03</span>
+        <h3>Aggregate into intents</h3>
+        <p>We cluster the prompts by what the person actually wants. Read together, patterns appear that no single search shows.</p>
       </div>
       <div class="step reveal">
-        <div class="num">04</div>
-        <div>
-          <h3>Map each job to the page catching it</h3>
-          <p>Every cluster already lands somewhere. We check whether that page actually answers the question — or whether the demand is leaking onto a blog post that can't convert.</p>
-        </div>
-      </div>
-      <div class="step reveal">
-        <div class="num">05</div>
-        <div>
-          <h3>Pick the lightest action that wins</h3>
-          <p>For each job: a callout in an existing hero, a new section, or a brand-new page. Start with the smallest change that captures the demand.</p>
-        </div>
+        <span class="num">04</span>
+        <h3>Turn intents into moves</h3>
+        <p>Each pattern becomes action — on the website and in the outreach plan. That last step is where most agencies stop short.</p>
       </div>
     </div>
   </div>
@@ -357,106 +281,113 @@
 <!-- ======================= THEMES ======================= -->
 <section class="themes">
   <div class="wrap">
-    <p class="eyebrow cyan">What we heard</p>
-    <h2 class="lead-h reveal">Seven things customers kept asking — in their own words.</h2>
-    <p class="kicker tight reveal">Every query below is real and unedited. Only the brand name has been removed.</p>
+    <p class="eyebrow cyan">What the prompts revealed</p>
+    <h2 class="lead-h reveal">Six things customers kept asking — in full sentences.</h2>
+    <p class="kicker tight reveal">The prompts lead. The shorter keyword searches simply cluster underneath them. Every question is real; only the brand name is removed.</p>
 
     <div class="cardgrid">
 
       <div class="card feature reveal">
-        <span class="tnum">Theme 01 · the headline insight</span>
-        <h3>Boarding is a travel purchase — so people search "near the airport."</h3>
-        <p class="job"><b>What they're really asking:</b> "I'm flying out. Where do I drop the dog on the way?" Proximity to the airport is a booking driver, not a location footnote.</p>
-        <div class="qlist">
-          <div class="qi">dog boarding near airport</div>
-          <div class="qi">dog boarding by airport</div>
-          <div class="qi">pet boarding near airport</div>
-          <div class="qi">airport pet hotel</div>
-          <div class="qi">can i bring my dog to the airport to pick someone up</div>
-          <div class="qi">pet relief area atlanta airport</div>
+        <span class="tnum">Intent 01 · the headline insight</span>
+        <h3>Nobody's shopping for a "kennel." They're planning a trip.</h3>
+        <div class="prompts">
+          <div class="pq">"i need to board my dog while i'm away — what are the different options available?"</div>
+          <div class="pq">"best pet boarding services for business travelers"</div>
+          <div class="pq">"best dog boarding for long vacations"</div>
+          <div class="pq">"is there dog boarding near the airport?"</div>
         </div>
-        <div class="did">
-          <span class="chip">What we did</span>
-          <p>Branded "near the airport" searches alone drew <b>9,000+ impressions a year</b>. We turned it into a hero callout on the airport-adjacent location, a travel FAQ, and a dedicated "board near the airport" page — then flagged the same play for every other location near a major airport.</p>
+        <div class="cluster">
+          <div class="clab">Shorter searches that cluster here</div>
+          <div class="chips"><span>dog boarding near airport</span><span>board dog while on vacation</span><span>overnight pet boarding</span><span>pet boarding near me</span></div>
         </div>
-      </div>
-
-      <div class="card reveal">
-        <span class="tnum">Theme 02 · reassurance</span>
-        <h3>"Is it a kennel — or something better?"</h3>
-        <p class="job"><b>The job:</b> confirm this is humane and safe before trusting it. People carry a negative "kennel" picture in their heads.</p>
-        <div class="qlist">
-          <div class="qi">what is a kennel</div>
-          <div class="qi">what is dog boarding</div>
-          <div class="qi">kennel vs boarding</div>
-          <div class="qi">what is a boarding kennel</div>
-        </div>
-        <div class="did">
-          <span class="chip">What we did</span>
-          <p>"what is a kennel" alone pulls <b>~17k impressions/yr.</b> Added a "not a kennel — a resort" reassurance section and linked the explainer into booking.</p>
+        <div class="insight">
+          <span class="chip">The insight</span>
+          <p>Boarding is bought as part of a trip. The deciding factors buried in these prompts — <b>proximity to the airport</b> and <b>trust while they're gone</b> — were never said out loud on the website.</p>
         </div>
       </div>
 
       <div class="card reveal">
-        <span class="tnum">Theme 03 · price</span>
-        <h3>"What is this going to cost me?"</h3>
-        <p class="job"><b>The job:</b> judge affordability before calling — and they ask it conversationally, by the day and by the week.</p>
-        <div class="qlist">
-          <div class="qi">cost to board a dog for a week</div>
-          <div class="qi">average cost of dog boarding per day</div>
-          <div class="qi">dog hotel cost</div>
-          <div class="qi">cost of cat boarding</div>
+        <span class="tnum">Intent 02 · trust</span>
+        <h3>They lead with their values.</h3>
+        <div class="prompts">
+          <div class="pq">"looking for a dog boarding company with a good reputation"</div>
+          <div class="pq">"i'm looking for dog boarding with individual suites"</div>
         </div>
-        <div class="did">
-          <span class="chip">What we did</span>
-          <p>Demand was leaking onto a pricing blog while location pages stayed silent on cost. Added a "starting at" callout and a price FAQ to the pages people actually book from.</p>
+        <div class="cluster">
+          <div class="clab">Clusters with</div>
+          <div class="chips"><span>is it a kennel</span><span>boarding vs kenneling</span><span>pet boarding reviews</span></div>
+        </div>
+        <div class="insight">
+          <span class="chip">The insight</span>
+          <p>Reputation and private suites — not price — open the conversation. Reassurance sells the booking.</p>
         </div>
       </div>
 
       <div class="card reveal">
-        <span class="tnum">Theme 04 · the emotional driver</span>
+        <span class="tnum">Intent 03 · the emotional driver</span>
         <h3>"Can I even leave my pet?"</h3>
-        <p class="job"><b>The job:</b> resolve the guilt of leaving a pet alone to work or travel. This is the real engine under boarding and daycare.</p>
-        <div class="qlist">
-          <div class="qi">dogs that can be left alone</div>
-          <div class="qi">dog breeds that can be left alone for 8 hours</div>
-          <div class="qi">i work 10 hours a day should i get a dog</div>
-          <div class="qi">dog anxiety when left alone</div>
+        <div class="prompts">
+          <div class="pq">"how long is it ok to leave a dog alone?"</div>
+          <div class="pq">"i work 10 hours a day, should i get a dog?"</div>
         </div>
-        <div class="did">
-          <span class="chip">What we did</span>
-          <p>These blogs rank #1 but dead-end. Added an empathy-led section and a daycare bridge: "Working long days? Here's the option."</p>
+        <div class="cluster">
+          <div class="clab">Clusters with</div>
+          <div class="chips"><span>dogs that can be left alone</span><span>separation anxiety in dogs</span></div>
         </div>
-      </div>
-
-      <div class="card reveal">
-        <span class="tnum">Theme 05 · highest intent</span>
-        <h3>"What do I need to bring?"</h3>
-        <p class="job"><b>The job:</b> confirm eligibility and requirements right before booking. The closest-to-purchase question of them all.</p>
-        <div class="qlist">
-          <div class="qi">how to prepare your dog for boarding</div>
-          <div class="qi">what dog vaccines are required</div>
-          <div class="qi">pet [brand] vaccine requirements</div>
-        </div>
-        <div class="did">
-          <span class="chip">What we did</span>
-          <p>The requirements question converts at a <b>57% click-through</b> — but the answer was split across three URLs. Consolidated it into one clear block on every location page.</p>
+        <div class="insight">
+          <span class="chip">The insight</span>
+          <p>The real driver is guilt. Daycare and boarding are the relief — if you answer the worry first.</p>
         </div>
       </div>
 
       <div class="card reveal">
-        <span class="tnum">Theme 06 · under-served demand</span>
-        <h3>Cat people search differently.</h3>
-        <p class="job"><b>The job:</b> find cat-specific boarding. In a dog-first facility, this intent is easy to under-answer.</p>
-        <div class="qlist">
-          <div class="qi">cat boarding near me</div>
-          <div class="qi">cost of cat boarding</div>
-          <div class="qi">boarding a cat cost</div>
-          <div class="qi">cat hotel cost</div>
+        <span class="tnum">Intent 04 · cats</span>
+        <h3>Cat parents ask differently.</h3>
+        <div class="prompts">
+          <div class="pq">"i need to arrange care for my cat while i travel — what's better, in-home sitting or a boarding facility?"</div>
+          <div class="pq">"best options for boarding a cat while on vacation"</div>
         </div>
-        <div class="did">
-          <span class="chip">What we did</span>
-          <p>Recommended a dedicated cat-boarding section per location so cat owners see themselves, not an afterthought.</p>
+        <div class="cluster">
+          <div class="clab">Clusters with</div>
+          <div class="chips"><span>cat boarding near me</span><span>cat hotel cost</span></div>
+        </div>
+        <div class="insight">
+          <span class="chip">The insight</span>
+          <p>Cat owners self-identify and weigh options out loud. In a dog-first facility they're the easiest booking to lose.</p>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <span class="tnum">Intent 05 · cost &amp; options</span>
+        <h3>"Just show me the options and the price."</h3>
+        <div class="prompts">
+          <div class="pq">"what are the different dog boarding options available?"</div>
+          <div class="pq">"i'm budgeting for a dog — what should i expect?"</div>
+        </div>
+        <div class="cluster">
+          <div class="clab">Clusters with</div>
+          <div class="chips"><span>cost to board a dog for a week</span><span>average dog boarding cost per day</span></div>
+        </div>
+        <div class="insight">
+          <span class="chip">The insight</span>
+          <p>They want the menu and the price before they call. Location pages that stay silent on cost lose them.</p>
+        </div>
+      </div>
+
+      <div class="card reveal">
+        <span class="tnum">Intent 06 · ready to buy</span>
+        <h3>"How do I actually book?"</h3>
+        <div class="prompts">
+          <div class="pq">"how do i book cat boarding?"</div>
+          <div class="pq">"i'm looking for a boarding facility that offers grooming too — can you help?"</div>
+        </div>
+        <div class="cluster">
+          <div class="clab">Clusters with</div>
+          <div class="chips"><span>book dog boarding online</span><span>pet boarding + grooming</span></div>
+        </div>
+        <div class="insight">
+          <span class="chip">The insight</span>
+          <p>These are ready-to-buy people asking for the next step. Make booking obvious and bundle the add-ons.</p>
         </div>
       </div>
 
@@ -467,81 +398,88 @@
 <!-- ======================= SPOTLIGHT ======================= -->
 <section class="spotlight">
   <div class="wrap">
-    <p class="eyebrow">The one nobody saw coming</p>
-    <p class="big">The customer is standing in the kitchen with a suitcase, thinking <span class="hl">"where do I drop the dog on the way to the airport?"</span> — not "find me a kennel."</p>
-    <p class="sub">A keyword tool would have shown "dog boarding" and moved on. The raw questions revealed the mindset behind the purchase. Once you see it, one insight becomes three different kinds of on-page action.</p>
-
-    <div class="actions3">
-      <div class="act">
-        <div class="an">Action type A</div>
-        <h4>A callout in the hero</h4>
-        <p>The lightest touch: one line on the location nearest the airport — "Minutes from the airport. Drop off on your way to your flight."</p>
-      </div>
-      <div class="act">
-        <div class="an">Action type B</div>
-        <h4>A new section</h4>
-        <p>A travel-and-boarding block plus FAQ that answers the trip-logistics questions people are already asking.</p>
-      </div>
-      <div class="act">
-        <div class="an">Action type C</div>
-        <h4>A new page</h4>
-        <p>A dedicated "pet boarding near the airport" page that owns the traveler intent outright — repeatable across every airport city.</p>
-      </div>
-    </div>
+    <p class="eyebrow">What aggregating draws out</p>
+    <p class="big">One prompt is a whisper. Hundreds, stacked together, said the same thing: <span class="hl">"where do I leave the dog on the way to the airport?"</span></p>
+    <p class="sub">No single search would make you rethink the business. But aggregate the travel-shaped prompts — "while I'm away," "business travelers," "long vacations," "near the airport" — and a whole line of demand appears that a keyword list would never surface.</p>
   </div>
 </section>
 
-<!-- ======================= BYPRODUCTS ======================= -->
-<section class="byproducts">
+<!-- ======================= TWO PLAYBOOKS ======================= -->
+<section class="playbooks">
   <div class="wrap">
-    <p class="eyebrow cyan">And what we weren't looking for</p>
-    <h2 class="lead-h reveal">The same read surfaced problems, for free.</h2>
-    <p class="kicker reveal">Listening closely to queries doubles as an audit. A few things the pull turned up on its own:</p>
-    <div class="bplist">
-      <div class="bp reveal"><div class="dot"></div><div><h4>Two posts fighting each other</h4><p>A "5 dog-friendly airports" and a "7 dog-friendly airports" article competing for the same searches. Consolidate and redirect.</p></div></div>
-      <div class="bp reveal"><div class="dot"></div><div><h4>A typo baked into a URL</h4><p>A live page slug misspelled "if" as "fi." Small, fixable, and quietly costing trust.</p></div></div>
-      <div class="bp reveal"><div class="dot"></div><div><h4>One question, three landing pages</h4><p>The high-intent requirements query scattered across three URLs instead of one clear answer.</p></div></div>
-      <div class="bp reveal"><div class="dot"></div><div><h4>A premium term left on the table</h4><p>"pet hotel" — 16k+ impressions a year — ranking around position 33. Aspirational language the pages could own.</p></div></div>
+    <p class="eyebrow cyan">One insight, two playbooks</p>
+    <h2 class="lead-h reveal">The best part: a single pattern feeds both sides of the strategy.</h2>
+    <p class="kicker reveal">Most teams would turn the airport insight into a web edit and stop. Read as demand, it also tells you exactly who to go build relationships with.</p>
+
+    <div class="pbgrid">
+      <div class="pb content reveal">
+        <h3>On the website</h3>
+        <p class="plede">Answer the prompts on the pages people land on.</p>
+        <ul>
+          <li>A "board near the airport" page, and a callout on the closest location</li>
+          <li>A plain "your options and what they cost" section</li>
+          <li>Reassurance up front: reputation, private suites, not a kennel</li>
+          <li>An obvious way to book — with grooming offered as an add-on</li>
+        </ul>
+      </div>
+      <div class="pb outreach reveal">
+        <h3>Out in the market</h3>
+        <p class="plede">Go where the travelers already are.</p>
+        <ul>
+          <li>Get listed by nearby airport hotels, parking, and travel services</li>
+          <li>Partner with local employers who send staff on business travel</li>
+          <li>Pitch "dog-friendly travel" writers and pet-lifestyle press</li>
+          <li>Show up on the airport and relocation resources people check first</li>
+        </ul>
+      </div>
     </div>
+
+    <p class="pbfoot reveal">One aggregated insight, pointed at both the <span class="u">website</span> and the <span class="u">outreach plan</span>.</p>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
     <img src="assets/scm-logo-white.png" alt="Sixth City Marketing">
-    <p class="fnote">Case study details are anonymized. Query data is real, pulled from Google Search Console across a trailing 12-month window. &nbsp;·&nbsp; <a href="https://www.sixthcitymarketing.com/">sixthcitymarketing.com</a></p>
+    <p class="fnote">Case study details are anonymized. Every question shown is a real, prompt-style query pulled from Google Search Console across a trailing 12-month window. &nbsp;·&nbsp; <a href="https://www.sixthcitymarketing.com/">sixthcitymarketing.com</a></p>
   </div>
 </footer>
 
 <script>
-  // Hero noise field
   var NOISE = [
-    "how to prepare your dog for boarding","what is pet boarding","cost to board a dog per day",
-    "dog boarding near me","dogs that can be left alone","cat boarding near me","pet hotel",
-    "what is a kennel","kennel vs boarding","how much does dog boarding cost","dog friendly airports",
-    "what vaccines does my dog need","cat hotel cost","boarding a cat cost","dog daycare near me",
-    "should i get a cat or a dog","how to get a cat into a carrier","pet boarding near me",
-    "dog breeds that can be left alone for 8 hours","average cost of dog boarding per day",
-    "what do i bring to board my dog","dog boarding by airport","overnight pet boarding","first time boarding dog"
+    "i need to board my dog while i'm away, what are my options",
+    "best pet boarding services for business travelers",
+    "best dog boarding for long vacations",
+    "looking for a dog boarding company with a good reputation",
+    "i'm looking for dog boarding with individual suites",
+    "how long is it ok to leave a dog alone",
+    "i work 10 hours a day, should i get a dog",
+    "i need to arrange care for my cat while i travel",
+    "what's better for cats, in-home sitting or a boarding facility",
+    "best options for boarding a cat while on vacation",
+    "places to leave pets while on vacation",
+    "how do i book cat boarding",
+    "i'm looking for a boarding facility that offers grooming too",
+    "what are the different dog boarding options available",
+    "is there dog boarding near the airport",
+    "i'm budgeting for a dog, what should i expect"
   ];
   (function(){
     var n = document.getElementById('noise');
     if(!n) return;
     NOISE.forEach(function(q,i){
       var s=document.createElement('span');
-      s.textContent=q;
-      s.style.transitionDelay=(i*28)+'ms';
+      s.textContent='"'+q+'"';
+      s.style.transitionDelay=(i*30)+'ms';
       n.appendChild(s);
     });
   })();
 
-  // Intersection reveals
   var io = new IntersectionObserver(function(entries){
     entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('is-in'); io.unobserve(e.target);} });
-  }, {threshold:0.16});
+  }, {threshold:0.14});
   document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
 
-  // Hero field trigger (fire shortly after load so the noise->signal reads as a moment)
   var field = document.getElementById('field');
   if(field){
     var fired=false;
